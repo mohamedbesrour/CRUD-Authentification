@@ -1,19 +1,21 @@
 const PORT = process.env.PORT ?? 8000;
 const express = require("express");
+const { v4: uuidv4 } =  require('uuid') // donne un identifiant unique
 const db = require("./config/database");
 const cors = require("cors");
 const bodyParser = require("body-parser"); // Importer bodyParser depuis le package body-parser
 
 const app = express();
+app.use(cors())//A RETIRER
 
 // Utiliser bodyParser comme middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(bodyParser.json());//A RETIRER
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));//A RETIRER
 
 // Vos autres routes et configurations...
 // const userModele = require("./modele/users");
 
-const authRoute = require("./route/authRoute");
+const authRoute = require("./route/authRoute");//A RETIRER
 // get all todos
 // app.get("/todos", async (req, res) => {
 //     try {
@@ -29,11 +31,11 @@ const corsOptions = {
   origin: "http://localhost:3000", // Autorise les requêtes provenant de ce domaine
   credentials: true, // Indiquez que les cookies et les en-têtes d'authentification peuvent être inclus
 };
-app.use(cors(corsOptions));
+app.use(cors(corsOptions));//A RETIRER
 
 // Configuration
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(bodyParser.json());//A RETIRER
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));//A RETIRER
 
 // db.sequelize
 //   .sync({ force: false })
@@ -47,6 +49,6 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 //     );
 //   });
 
-app.use("/auth", authRoute);
+app.use("/auth", authRoute);//A RETIRER
 
 app.listen(PORT, () => console.log(`Le serveur a démarré sur le PORT ${PORT}`));

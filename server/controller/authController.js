@@ -1,4 +1,5 @@
 const { pool } = require("../config/database");
+require("../route/authRoute");
 // const Users = require("../modele/users");
 
 // const register = async (req, res) => {
@@ -15,15 +16,33 @@ const { pool } = require("../config/database");
 // };
 
 const getUser = async (req, res) => {
+  console.log(req);
+  const { userEmail } = req.params; //pour récupérer seulement l'email admin dans >App.js<
+  console.log(userEmail);
   try {
-    const todos = await pool.query("SELECT * FROM todos");
+    const todos = await pool.query(
+      "SELECT * FROM todos WHERE user_email = $1",
+      [userEmail]
+    );
     //   pool.query("SELECT * FROM user")
-    res.json(todos.rows[0]);
+    res.json(todos.rows);
   } catch (err) {
     console.log("erreur");
     console.error(err.message);
   }
 };
 
-module.exports = { getUser };
+//créé un nouvel élémment de liste
+const postTodos = async (req, res) => {
+  const {user_email, title, progress, date} = req.body
+  const id = uuidv4()
+  try {
+    pool.query(`INSERT INTO todos(id, user_email, title, progress, date) VALUES($1, $2, $3, $4, $5)`,
+    [id, user_email, title, progress, date])
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+module.exports = { getUser, postTodos };
 // module.exports = { register, getUser };
