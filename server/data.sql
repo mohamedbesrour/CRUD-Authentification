@@ -1,4 +1,4 @@
-CREATE DATABASE authentification;
+CREATE DATABASE authdb;
 
 CREATE TABLE todos (
   id VARCHAR(255) PRIMARY KEY,
