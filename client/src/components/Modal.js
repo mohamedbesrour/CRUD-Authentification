@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 
 const Modal = ({ mode, setShowModal, getData, tache }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(null);
+  // const [cookies ] = useCookies(null);
+  // const [cookies, setCookie, removeCookie] = useCookies(null);
   const editMode = mode === "edit" ? true : false; //booleen
 
   const [data, setData] = useState({
-    user_email: editMode ? tache.user_email : cookies.Email,
-    title: editMode ? tache.title : null,
+    // user_email: editMode ? tache.user_email : cookies.Email,
+    user_email: editMode ? tache.user_email : "momoboss94@gmail.com",
+    title: editMode ? tache.title : "", // Utilisez une chaîne vide au lieu de null
     progress: editMode ? tache.progress : 50,
     date: editMode ? tache.date : new Date(),
   });
@@ -79,7 +81,7 @@ const Modal = ({ mode, setShowModal, getData, tache }) => {
             onChange={handleChange}
           />
           <br />
-          <label for="range">Drag to select your current progress</label>{" "}
+          <label htmlFor="range">Drag to select your current progress</label>{" "}
           {/*etiquette Bar de Progression*/}
           <input
             required

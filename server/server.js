@@ -6,7 +6,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser"); // Importer bodyParser depuis le package body-parser
 
 const app = express();
-app.use(cors())//A RETIRER
+app.use(cors())
+app.use(express.json())
 
 // Utiliser bodyParser comme middleware
 app.use(bodyParser.json());//A RETIRER

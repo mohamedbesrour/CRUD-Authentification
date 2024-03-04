@@ -34,15 +34,44 @@ const getUser = async (req, res) => {
 
 //créé un nouvel élémment de liste
 const postTodos = async (req, res) => {
-  const {user_email, title, progress, date} = req.body
-  const id = uuidv4()
+  const { user_email, title, progress, date } = req.body;
+  const id = uuidv4();
   try {
-    pool.query(`INSERT INTO todos(id, user_email, title, progress, date) VALUES($1, $2, $3, $4, $5)`,
-    [id, user_email, title, progress, date])
+    const newToDo = await pool.query(
+      `INSERT INTO todos(id, user_email, title, progress, date) VALUES($1, $2, $3, $4, $5);`,
+      [id, user_email, title, progress, date]
+    );
+    res.json(newToDo);
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
 
-module.exports = { getUser, postTodos };
+//met a jour un élément de la liste avec son id
+const putTodos = async (req, res) => {
+  const { id } = req.params;
+  const { user_email, title, progress, date } = req.body;
+  try {
+    const editToDo = await pool.query(
+      "UPDATE todos SET user_email = $1, title = $2, progress = $3, date = $4 WHERE id = $5;",
+      [user_email, title, progress, date, id]
+    );
+    res.json(editToDo);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+//supprime un élement de la liste
+const deleteTodos = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const suppToDo = await pool.query("DELETE FROM todos WHERE id = $1;", [id]);
+    res.json(suppToDo);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+module.exports = { getUser, postTodos, putTodos, deleteTodos };
 // module.exports = { register, getUser };

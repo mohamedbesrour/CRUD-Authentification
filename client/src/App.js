@@ -3,13 +3,13 @@ import ListItem from "./components/ListItem";
 import { useEffect, useState } from "react";
 
 function App() {
-  const userEmail = "momoboss94@gmail.com";
+  const userEmail = "m.besrour@yahoo.com";
   const [tasks, setTasks] = useState(null);
 
   const getData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/auth/todos/${userEmail}`
+        `${process.env.REACT_APP_SERVERURL}/todos/${userEmail}`
       );
       const json = await response.json();
       setTasks(json);
@@ -27,7 +27,7 @@ const sortedTasks = tasks?.sort((a,b) => new Date(a.date) - new Date(b.date))
   return (
     <div className="app">
       <ListHeader listName={"Holiday tick list"} />
-      {sortedTasks?.map((tache) => <ListItem key={tache.id} tache={tache}/>)};
+      {sortedTasks?.map((tache) => <ListItem key={tache.id} tache={tache} getData={getData} />)}
     </div>
   );
 }
