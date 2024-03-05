@@ -1,26 +1,21 @@
-const { pool } = require("../config/database");
-require("../route/authRoute");
+const pool = require("../config/database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-// require("../server"); // A retirer peut-etre
-// const Users = require("../modele/users");
-
+const { v4: uuidv4 } = require('uuid');
 
 const getUser = async (req, res) => {
-  console.log(req);
+  // console.log(req);
   const { userEmail } = req.params; //pour récupérer seulement l'email admin dans >App.js<
-  console.log(userEmail);
+  // console.log(userEmail);
   try {
     const todos = await pool.query(
-      "SELECT * FROM todos WHERE user_email = $1",
+      'SELECT * FROM todos WHERE user_email = $1',
       [userEmail]
     );
-    //   pool.query("SELECT * FROM user")
     res.json(todos.rows);
   } catch (err) {
-    console.log("erreur");
-    console.error(err.message);
+    // console.log("erreur");
+    console.error(err);
   }
 };
 
@@ -41,14 +36,14 @@ const postTodos = async (req, res) => {
 
 //met a jour un élément de la liste avec son id
 const putTodos = async (req, res) => {
-  const { id } = req.params;
-  const { user_email, title, progress, date } = req.body;
+  const { id } = req.params
+  const { user_email, title, progress, date } = req.body
   try {
     const editToDo = await pool.query(
-      "UPDATE todos SET user_email = $1, title = $2, progress = $3, date = $4 WHERE id = $5;",
+      'UPDATE todos SET user_email = $1, title = $2, progress = $3, date = $4 WHERE id = $5;',
       [user_email, title, progress, date, id]
-    );
-    res.json(editToDo);
+    )
+    res.json(editToDo)
   } catch (err) {
     console.error(err);
   }
@@ -58,10 +53,10 @@ const putTodos = async (req, res) => {
 const deleteTodos = async (req, res) => {
   const { id } = req.params;
   try {
-    const suppToDo = await pool.query("DELETE FROM todos WHERE id = $1", [id]);
-    res.json(suppToDo);
+    const suppToDo = await pool.query(`DELETE FROM todos WHERE id = $1;`, [id])
+    res.json(suppToDo)
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 };
 
@@ -69,14 +64,20 @@ const deleteTodos = async (req, res) => {
 const postInscription = async (req, res) => {
   const { email, password } = req.body  // password au lieu de hashed_password
   const salt = bcrypt.genSaltSync(10)
-  const Hashed_password = bcrypt.hashSync(password, salt)
+  const HashedPassword = bcrypt.hashSync(password, salt)
+
   try {
-    const signUp = await pool.query(`INSERT INTO users (email, password) VALUE($1, $2);`,
-    [email, Hashed_password])
+    const signUp = await pool.query(`INSERT INTO users (email, password) VALUES($1, $2)`,
+    [email, HashedPassword])
+
     const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr'})
-    res.json({ email, token }) // token
+
+    res.status(200).json({signUp}) // token    
   }catch (err){
-    res.json({ detail: err.detail })
+    console.error(err)
+    if (err) {
+      res.json({ detail: err.detail})
+    }
   }
 }
 
@@ -88,7 +89,7 @@ const postConnexion = async (req, res) => {
 
     if (!users.rows.length) return res.json({ detail: 'Cette utilisateur existe pas'})
 
-    const sucess = await bcrypt.compare(password, users.rows[0].hashed_password)
+    const sucess = await bcrypt.compare(password, users.rows[0].password)
     const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr'})
 
     if (sucess) {
@@ -96,7 +97,7 @@ const postConnexion = async (req, res) => {
     } else {
       res.json({ detail: "Login failed"})
     }
-  }catch (err){
+  } catch (err){
     console.error(err)
   }
 }

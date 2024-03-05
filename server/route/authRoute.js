@@ -7,6 +7,7 @@ const router = Router();
 router.get("/todos/:userEmail", authController.getUser);
 router.post("/todos", authController.postTodos);
 router.put("/todos/id", authController.putTodos);
+router.delete("/todos/:id", authController.deleteTodos);
 
 //Pour l'authentification
 router.post("/signup", authController.postInscription);

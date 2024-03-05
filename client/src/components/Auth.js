@@ -25,7 +25,7 @@ const Auth = () => {
 
     const response = await fetch(
       //`${process.env.REACT_APP_SERVERURL}/auth/signup`, {email, password},
-      `${process.env.REACT_APP_SERVERURL}/auth/${endpoint}`,
+      `${process.env.REACT_APP_SERVERURL}/${endpoint}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

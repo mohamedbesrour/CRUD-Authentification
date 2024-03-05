@@ -1,6 +1,5 @@
 const PORT = process.env.PORT ?? 8000;
 const express = require("express");
-const { v4: uuidv4 } =  require('uuid') // donne un identifiant unique
 const db = require("./config/database");
 const cors = require("cors");
 const bodyParser = require("body-parser"); // Importer bodyParser depuis le package body-parser

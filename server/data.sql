@@ -9,6 +9,6 @@ CREATE TABLE todos (
     date VARCHAR(300)
 );
 CREATE TABLE users (
-    email VARCHAR(255) PRIMARY KEY,
-    password VARCHAR(1000)
+  email VARCHAR(255) PRIMARY KEY,
+  password VARCHAR(255)
 );
