@@ -1,19 +1,11 @@
 const { pool } = require("../config/database");
 require("../route/authRoute");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+// require("../server"); // A retirer peut-etre
 // const Users = require("../modele/users");
 
-// const register = async (req, res) => {
-//   try {
-//     const { name, email, password, phoneNumber } = req.body;
-//     // Créer un nouvel utilisateur en utilisant le modèle Users
-//     const newUser = await Users.create({ name, email, password, phoneNumber });
-//     res.status(200).json(newUser);
-//   } catch (error) {
-//     res
-//       .status(401)
-//       .json({ message: "Problème lors de la création de l'utilisateur" });
-//   }
-// };
 
 const getUser = async (req, res) => {
   console.log(req);
@@ -66,12 +58,47 @@ const putTodos = async (req, res) => {
 const deleteTodos = async (req, res) => {
   const { id } = req.params;
   try {
-    const suppToDo = await pool.query("DELETE FROM todos WHERE id = $1;", [id]);
+    const suppToDo = await pool.query("DELETE FROM todos WHERE id = $1", [id]);
     res.json(suppToDo);
   } catch (err) {
     console.error(err);
   }
 };
 
-module.exports = { getUser, postTodos, putTodos, deleteTodos };
-// module.exports = { register, getUser };
+//signup > inscription
+const postInscription = async (req, res) => {
+  const { email, password } = req.body  // password au lieu de hashed_password
+  const salt = bcrypt.genSaltSync(10)
+  const Hashed_password = bcrypt.hashSync(password, salt)
+  try {
+    const signUp = await pool.query(`INSERT INTO users (email, password) VALUE($1, $2);`,
+    [email, Hashed_password])
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr'})
+    res.json({ email, token }) // token
+  }catch (err){
+    res.json({ detail: err.detail })
+  }
+}
+
+// login >  connexion
+const postConnexion = async (req, res) => {
+  const {email, password} = req.body
+  try {
+    const users = await pool.query('SELECT * FROM users WHERE email = $1', [email])
+
+    if (!users.rows.length) return res.json({ detail: 'Cette utilisateur existe pas'})
+
+    const sucess = await bcrypt.compare(password, users.rows[0].hashed_password)
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr'})
+
+    if (sucess) {
+      res.json({ 'email' : users.rows[0].email, token})
+    } else {
+      res.json({ detail: "Login failed"})
+    }
+  }catch (err){
+    console.error(err)
+  }
+}
+
+module.exports = { getUser, postTodos, putTodos, deleteTodos, postInscription, postConnexion };

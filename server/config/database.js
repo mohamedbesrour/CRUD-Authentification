@@ -8,7 +8,7 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   client_encoding: "utf8", // or any other appropriate encoding
-  logging: console.log,
+  logging: console.log, // a retirer
 });
 
 module.exports = { pool };

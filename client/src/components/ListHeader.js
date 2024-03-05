@@ -1,13 +1,17 @@
-import React from "react";
 import Modal from "./Modal";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useCookies} from 'react-cookie'
 
-function ListHeader({ listName, getData }) {
+const ListHeader = ({ listName, getData }) => {
+  const [cookies, setCookie, removeCookie] = useCookies(null) //pour la déconnexion
   const [showModal, setShowModal] = useState(false);
 
-  const signOut = () => {
-    console.log("signout");
-  };
+  const signOut = () => {  // deconnecte en suppriment les cookie AuthToken dans inspecter/Application/Cookies
+    console.log('signout')
+    removeCookie('Email')
+    removeCookie('AuthToken')
+    window.location.reload()
+  }
 
   return (
     <div className="list-header">
@@ -22,7 +26,7 @@ function ListHeader({ listName, getData }) {
       </div>
       {showModal && <Modal mode={"create"} setShowModal={setShowModal} getData={getData} />}
     </div>
-  );
+  )
 }
 
 export default ListHeader;

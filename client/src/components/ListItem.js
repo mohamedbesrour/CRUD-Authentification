@@ -3,12 +3,13 @@ import TickIcon from "./TickIcon";
 import Modal from "./Modal";
 import ProgressBar from "./ProgressBar";
 
-function ListItem({ tache, getData }) {
+const ListItem = ({ tache, getData }) => {
   const [showModal, setShowModal] = useState(false);
+  
   const deleteItem = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${tache.id}`, {
-        method: "DELETE",
+        method: "DELETE"
       });
       if (response.status === 200) {
         getData();
@@ -16,14 +17,15 @@ function ListItem({ tache, getData }) {
     } catch (err) {
       console.error(err);
     }
-  };
+  }
+
+
   return (
     <li className="list-item">
       <div className="info-container">
         <TickIcon />
         <p className="task-title">{tache.title}</p>
-        <ProgressBar />
-        {/* <ProgressBar progress={tache.progress}/> */}
+        <ProgressBar progress={tache.progress}/>
       </div>
 
       <div className="button-container">
@@ -42,7 +44,6 @@ function ListItem({ tache, getData }) {
           tache={tache}
         />
       )}
-      getData={getData} {/* A retirer si BUG  */}
     </li>
   );
 }
