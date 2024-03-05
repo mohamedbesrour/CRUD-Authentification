@@ -4,7 +4,7 @@ import Auth from "./components/Auth";
 import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 
-function App() {
+const App = () => {
   const [cookies, setCookie, removeCookie] = useCookies(null)
   const authToken = cookies.AuthToken // si le jeton existe, permet la redirection vrs la page de liste
   const userEmail = cookies.Email;  // const userEmail = "momoboss94@gmail.com";  m.besrour@yahoo.com
@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     if (authToken) {
-      getData()
+      getData();
     }
   }, [])
   console.log(tasks);
